@@ -25,15 +25,23 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
 
-    - name: Copy files to server
-      uses: appleboy/scp-action@master
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
       with:
-        host: ${{ secrets.HOST_TEST }}
-        username: "ubuntu"
-        key: ${{ secrets.KEY_TEST }}
-        port: 22
-        source: "."
-        target: "~/af"
+        username: "deco1903"
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: deco1903/curso-ci:${{ github.sha }}
+
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -43,6 +51,6 @@ jobs:
         key: ${{ secrets.KEY_TEST }}
         port: 22
         script: |
-          cd ~/af
-          docker-compose up -d --build
-
+          docker stop ai
+          docker rm --force ai
+          docker run -d -p 8080:8080 --network=rede --name ai deco1903/curso-ci:${{ github.sha }}

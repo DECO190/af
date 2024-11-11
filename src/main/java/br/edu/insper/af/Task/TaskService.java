@@ -44,7 +44,9 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuário não é administrador");
         }
 
-        return taskRepository.save(task);
+        taskRepository.save(task);
+
+        return task;
     }
 
     public void deleteTask(String id, String token) {

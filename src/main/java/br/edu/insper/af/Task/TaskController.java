@@ -17,7 +17,7 @@ public class TaskController {
     }
 
     @PostMapping("/tarefa")
-    public Task createTask(Task task, @RequestHeader("Authorization") String token) {
+    public Task createTask(@RequestBody Task task, @RequestHeader("Authorization") String token) {
         return taskService.createTask(task, token);
     }
 
