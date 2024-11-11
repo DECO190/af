@@ -32,7 +32,7 @@ jobs:
         username: "ubuntu"
         key: ${{ secrets.KEY_TEST }}
         port: 22
-        source: "docker-compose.yml,target/*.jar"
+        source: "."
         target: "~/af"
 
     - name: executing remote ssh commands using password
